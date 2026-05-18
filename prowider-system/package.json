@@ -1,0 +1,26 @@
+{
+  "name": "prowider-system",
+  "version": "1.0.0",
+  "description": "Prowider Mini Lead Distribution System - Full Stack Monorepo",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../shared && npm install",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "prisma:generate": "cd backend && npm run prisma:generate",
+    "prisma:migrate": "cd backend && npm run prisma:migrate",
+    "prisma:studio": "cd backend && npm run prisma:studio"
+  },
+  "keywords": ["lead-distribution", "monorepo", "nextjs", "express", "prisma"],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ]
+}

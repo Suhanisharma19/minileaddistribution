@@ -1,0 +1,13 @@
+{
+  "name": "prowider-shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for Prowider system",
+  "main": "types.ts",
+  "types": "types.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

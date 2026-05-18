@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  AGENT
+}
+
+enum LeadStatus {
+  NEW
+  ASSIGNED
+  CONVERTED
+  LOST
+}
+
+enum LeadSource {
+  WEBSITE
+  REFERRAL
+  ADS
+  SOCIAL_MEDIA
+  EMAIL_CAMPAIGN
+  COLD_CALL
+  OTHER
+}
+
+enum ActivityAction {
+  ASSIGNED
+  CALLED
+  EMAIL_SENT
+  STATUS_UPDATED
+  NOTE_ADDED
+  MEETING_SCHEDULED
+  FOLLOW_UP
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(AGENT)
+  createdAt DateTime @default(now())
+
+  assignedLeads   Lead[]           @relation("AssignedLeads")
+  createdLeads    Lead[]           @relation("CreatedLeads")
+  leadActivities  LeadActivity[]   @relation("PerformedActivities")
+  notifications   Notification[]
+
+  @@map("users")
+}
+
+model Lead {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String
+  phone       String
+  status      LeadStatus @default(NEW)
+  source      LeadSource
+  assignedTo  String?    @db.ObjectId
+  createdBy   String     @db.ObjectId
+  createdAt   DateTime   @default(now())
+
+  assignedUser  User?           @relation("AssignedLeads", fields: [assignedTo], references: [id])
+  creator       User            @relation("CreatedLeads", fields: [createdBy], references: [id])
+  activities    LeadActivity[]
+
+  @@index([status])
+  @@index([assignedTo])
+  @@map("leads")
+}
+
+model LeadActivity {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  leadId      String          @db.ObjectId
+  action      ActivityAction
+  note        String?
+  performedBy String          @db.ObjectId
+  timestamp   DateTime        @default(now())
+
+  lead   Lead @relation(fields: [leadId], references: [id])
+  user   User @relation("PerformedActivities", fields: [performedBy], references: [id])
+
+  @@index([leadId])
+  @@index([performedBy])
+  @@map("lead_activities")
+}
+
+model Notification {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  type        String
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
