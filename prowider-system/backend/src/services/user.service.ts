@@ -14,7 +14,6 @@ export const getUsers = async (filters: {
       name: true,
       role: true,
       createdAt: true,
-      updatedAt: true,
     },
     orderBy: { createdAt: 'desc' },
   });
@@ -29,7 +28,6 @@ export const getUserById = async (id: string) => {
       name: true,
       role: true,
       createdAt: true,
-      updatedAt: true,
     },
   });
 };
@@ -40,14 +38,16 @@ export const updateUser = async (id: string, data: {
 }) => {
   return await prisma.user.update({
     where: { id },
-    data,
+    data: {
+      ...(data.name && { name: data.name }),
+      ...(data.role && { role: data.role as 'ADMIN' | 'MANAGER' | 'AGENT' }),
+    },
     select: {
       id: true,
       email: true,
       name: true,
       role: true,
       createdAt: true,
-      updatedAt: true,
     },
   });
 };

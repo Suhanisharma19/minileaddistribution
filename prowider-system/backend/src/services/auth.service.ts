@@ -20,7 +20,7 @@ export const registerUser = async (data: {
       email: data.email,
       password: hashedPassword,
       name: data.name,
-      role: data.role || 'AGENT',
+      role: (data.role || 'AGENT') as 'ADMIN' | 'MANAGER' | 'AGENT',
     },
   });
 

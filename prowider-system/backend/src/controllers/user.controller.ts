@@ -22,7 +22,6 @@ export const getUsers = async (
         name: true,
         role: true,
         createdAt: true,
-        updatedAt: true,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -52,7 +51,6 @@ export const getUserById = async (
         name: true,
         role: true,
         createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -82,7 +80,7 @@ export const updateUser = async (
       where: { id },
       data: {
         ...(name && { name }),
-        ...(role && { role }),
+        ...(role && { role: role as any }),
       },
       select: {
         id: true,
@@ -90,7 +88,6 @@ export const updateUser = async (
         name: true,
         role: true,
         createdAt: true,
-        updatedAt: true,
       },
     });
 
