@@ -1,0 +1,40 @@
+services:
+  # Backend Service
+  - type: web
+    name: prowider-backend
+    env: node
+    buildCommand: cd backend && npm install && npm run prisma:generate && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: FRONTEND_URL
+        value: https://prowider-frontend.onrender.com
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        value: your_email@gmail.com
+      - key: SMTP_PASS
+        value: your_email_app_password
+      - key: SMTP_FROM
+        value: "Prowider <your_email@gmail.com>"
+
+  # Frontend Service
+  - type: web
+    name: prowider-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://prowider-backend.onrender.com
